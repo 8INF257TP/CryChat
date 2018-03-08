@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/InfoMobile.iml" filepath="$PROJECT_DIR$/InfoMobile.iml" />
+      <module fileurl="file://$PROJECT_DIR$/CryChat.iml" filepath="$PROJECT_DIR$/CryChat.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
