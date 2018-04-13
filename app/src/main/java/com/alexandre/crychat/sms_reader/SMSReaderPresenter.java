@@ -1,4 +1,4 @@
-package com.alexandre.crychat.SMSReader;
+package com.alexandre.crychat.sms_reader;
 
 public class SMSReaderPresenter implements ISMSReaderContract.Presenter {
 

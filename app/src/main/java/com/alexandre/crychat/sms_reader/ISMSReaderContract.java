@@ -1,7 +1,7 @@
-package com.alexandre.crychat.SMSReader;
+package com.alexandre.crychat.sms_reader;
 
-import com.alexandre.crychat.Utilities.IBasePresenter;
-import com.alexandre.crychat.Utilities.IBaseView;
+import com.alexandre.crychat.utilities.IBasePresenter;
+import com.alexandre.crychat.utilities.IBaseView;
 
 public interface ISMSReaderContract {
     interface View extends IBaseView<Presenter> {

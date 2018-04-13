@@ -1,4 +1,5 @@
-package com.alexandre.crychat.Utilities;
+package com.alexandre.crychat.utilities;
 
-public interface IBaseView {
+public interface IBaseView<T> {
+    void setPresenter(T presenter);
 }

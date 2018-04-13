@@ -1,4 +1,6 @@
-package com.alexandre.crychat.Utilities;
+package com.alexandre.crychat.utilities;
 
 public interface IBasePresenter {
+    void subscribe();
+    void unsubscribe();
 }
