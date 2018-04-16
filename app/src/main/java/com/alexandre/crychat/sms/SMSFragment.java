@@ -1,4 +1,4 @@
-package com.alexandre.crychat.sms_reader;
+package com.alexandre.crychat.sms;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

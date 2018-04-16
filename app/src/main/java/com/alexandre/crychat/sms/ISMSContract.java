@@ -1,4 +1,4 @@
-package com.alexandre.crychat.sms_reader;
+package com.alexandre.crychat.sms;
 
 import com.alexandre.crychat.utilities.IBasePresenter;
 import com.alexandre.crychat.utilities.IBaseView;
