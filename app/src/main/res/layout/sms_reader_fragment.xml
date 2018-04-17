@@ -14,13 +14,10 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/message"
+        <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:text="TextView" />
+            android:layout_weight="6"/>
 
         <Button
             android:id="@+id/send"
