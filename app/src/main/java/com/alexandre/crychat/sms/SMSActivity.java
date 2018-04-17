@@ -8,26 +8,26 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.alexandre.crychat.R;
 
-public class SMSReaderActivity extends AppCompatActivity {
-    private SMSReaderPresenter presenter;
-    private SMSReaderFragment frag;
+public class SMSActivity extends AppCompatActivity {
+    private SMSPresenter presenter;
+    private SMSFragment frag;
 
     @Override
     protected void onCreate(Bundle savedBundle) {
         super.onCreate(savedBundle);
         setContentView(R.layout.activity_main);
 
-        frag = (SMSReaderFragment) getSupportFragmentManager().findFragmentById(R.id.sms_reader_fragment);
+        frag = (SMSFragment) getSupportFragmentManager().findFragmentById(R.id.sms_reader_fragment);
 
         if(frag == null) {
-            frag = SMSReaderFragment.getInstance();
+            frag = SMSFragment.getInstance();
 
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.activity_main_frame, frag);
             transaction.commit();
         }
 
-        presenter = new SMSReaderPresenter(frag);
+        presenter = new SMSPresenter(frag);
     }
 
     @Override

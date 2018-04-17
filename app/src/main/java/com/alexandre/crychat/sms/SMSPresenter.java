@@ -1,10 +1,14 @@
 package com.alexandre.crychat.sms;
 
-public class SMSReaderPresenter implements ISMSReaderContract.Presenter {
+import android.util.Log;
 
-    private ISMSReaderContract.View frag;
+import com.alexandre.crychat.utilities.CryptoServiceProvider;
 
-    SMSReaderPresenter(ISMSReaderContract.View fragment)
+public class SMSPresenter implements ISMSContract.Presenter {
+
+    private ISMSContract.View frag;
+
+    SMSPresenter(ISMSContract.View fragment)
     {
         frag = fragment;
         frag.setPresenter(this);
@@ -17,7 +21,15 @@ public class SMSReaderPresenter implements ISMSReaderContract.Presenter {
 
     @Override
     public void subscribe() {
-
+        CryptoServiceProvider crypto = new CryptoServiceProvider("test");
+        try {
+            byte[] crypted = crypto.Encrypt("va chier mon gros calis de chiens de marde");
+            Log.d("CryChat crypted", crypted.toString());
+            String decrypted = crypto.Decrypt(crypted);
+            Log.d("CryChat decrypted", decrypted);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

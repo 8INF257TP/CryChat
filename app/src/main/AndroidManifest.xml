@@ -29,7 +29,7 @@
         </receiver>
 
 
-        <activity android:name=".sms_reader.SMSReaderActivity">
+        <activity android:name=".sms.SMSActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

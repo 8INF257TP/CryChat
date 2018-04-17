@@ -8,13 +8,13 @@ import android.view.ViewGroup;
 
 import com.alexandre.crychat.R;
 
-public class SMSReaderFragment extends Fragment implements ISMSReaderContract.View{
+public class SMSFragment extends Fragment implements ISMSContract.View{
 
-    private ISMSReaderContract.Presenter presenter;
+    private ISMSContract.Presenter presenter;
 
-    public static SMSReaderFragment getInstance()
+    public static SMSFragment getInstance()
     {
-        return new SMSReaderFragment();
+        return new SMSFragment();
     }
 
     @Override
@@ -38,7 +38,12 @@ public class SMSReaderFragment extends Fragment implements ISMSReaderContract.Vi
     }
 
     @Override
-    public void setPresenter(ISMSReaderContract.Presenter presenter) {
+    public void setPresenter(ISMSContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void messageReceived(String sender, String message) {
+
     }
 }
