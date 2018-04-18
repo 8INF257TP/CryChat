@@ -6,6 +6,8 @@ import com.alexandre.crychat.utilities.CryptoServiceProvider;
 
 import java.io.ByteArrayOutputStream;
 
+import android.telephony.SmsManager;
+
 public class SMSPresenter implements ISMSContract.Presenter {
 
     private ISMSContract.View frag;
@@ -25,6 +27,11 @@ public class SMSPresenter implements ISMSContract.Presenter {
     @Override
     public void getMessages(String groupId) {
 
+    }
+
+    public void sendMessage(){
+        SmsManager smsManager = SmsManager.getDefault();
+        smsManager.sendTextMessage("+15812343545", null, "sms message", null, null);
     }
 
     @Override
