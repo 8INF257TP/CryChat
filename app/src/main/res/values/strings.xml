@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CryChat</string>
+    <string name="enter_message">Entrez votre message ici</string>
 </resources>
