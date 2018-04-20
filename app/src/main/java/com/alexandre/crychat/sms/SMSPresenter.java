@@ -1,12 +1,11 @@
 package com.alexandre.crychat.sms;
 
 import android.util.Log;
-
 import com.alexandre.crychat.utilities.CryptoServiceProvider;
-
 import java.io.ByteArrayOutputStream;
-
 import android.telephony.SmsManager;
+import com.alexandre.crychat.R;
+
 
 public class SMSPresenter implements ISMSContract.Presenter {
 
@@ -29,9 +28,11 @@ public class SMSPresenter implements ISMSContract.Presenter {
 
     }
 
-    public void sendMessage(){
+    public void sendMessage(String msg){
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage("+15812343545", null, "sms message", null, null);
+        smsManager.sendTextMessage("+15812343545", null, msg, null, null);
+
+
     }
 
     @Override
