@@ -58,6 +58,15 @@ public class SMSFragment extends Fragment implements ISMSContract.View{
         // attaching Adapater to the ListView
         listView.setAdapter(adapter);
 
+        final Conversation conv = new Conversation("10023", "test");
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                db.conversationDao().insertConversation(conv);
+            }
+        }).start();
+
         // attaching onClickListener to send button
         sendButton = view.findViewById(R.id.send);
         sendButton.setOnClickListener(listener);
