@@ -74,10 +74,9 @@ public class SMSFragment extends Fragment implements ISMSContract.View{
             adapter.add(sentMsg);
             adapter.notifyDataSetChanged();
 
-            db.messageDao().insertMessage(sentMsg);
+            //db.messageDao().insertMessage(sentMsg);
 
             presenter.sendMessage(edit.getText().toString());
-
         }
     };
 

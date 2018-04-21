@@ -27,7 +27,7 @@ public class SMSActivity extends AppCompatActivity {
             transaction.commit();
         }
 
-        presenter = new SMSPresenter(frag);
+        presenter = new SMSPresenter(this, frag);
     }
 
     @Override
