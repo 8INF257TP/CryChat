@@ -28,6 +28,10 @@ public class SMSPresenter implements ISMSContract.Presenter {
 
     }
 
+    /**
+     *
+     * @param msg Message devant être envoyé
+     */
     public void sendMessage(String msg){
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage("+15812343545", null, msg, null, null);
