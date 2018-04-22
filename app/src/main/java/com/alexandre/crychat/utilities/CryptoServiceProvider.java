@@ -11,7 +11,6 @@ import javax.crypto.KeyGenerator;
 
 public class CryptoServiceProvider {
     private SecretKey key;
-
     /**
      *
      * @param password The passphrase used to generate the AES key

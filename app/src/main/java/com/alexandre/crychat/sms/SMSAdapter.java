@@ -30,6 +30,7 @@ public class SMSAdapter extends ArrayAdapter<Message>{
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.received_message, parent, false);
         }
 
+        // creating ListView items
         TextView dateReceived = (TextView)convertView.findViewById(R.id.dateReceived);
         TextView theMessage = (TextView)convertView.findViewById(R.id.theMessage);
 

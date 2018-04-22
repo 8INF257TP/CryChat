@@ -12,7 +12,7 @@ public interface ISMSContract {
 
     interface Presenter extends IBasePresenter {
         void getMessages(String groupId);
-        void sendMessage();
+        void sendMessage(String msg);
 
         @Override
         void subscribe();
