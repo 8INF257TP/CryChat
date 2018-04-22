@@ -7,8 +7,20 @@ import android.os.Bundle;
 import android.telephony.SmsMessage;
 
 import com.alexandre.crychat.sms.SMSPresenter;
+import com.alexandre.crychat.utilities.IDataReceived;
 
 public class SmsReceiver extends BroadcastReceiver {
+
+    private static IDataReceived listener;
+
+    public static void addListener(IDataReceived listener) {
+        SmsReceiver.listener = listener;
+    }
+
+    public static void removeListener() {
+        SmsReceiver.listener = null;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Bundle bundle = intent.getExtras();
@@ -19,7 +31,8 @@ public class SmsReceiver extends BroadcastReceiver {
             for(int i = 0; i < pdus.length; ++i)
             {
                 SmsMessage sms = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                SMSPresenter.messageReceived(sms);
+                if(listener != null)
+                    listener.onDataReceived(sms);
             }
         }
     }
