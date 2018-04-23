@@ -14,8 +14,10 @@ public interface ConversationDao {
     @Query("SELECT * FROM conversation WHERE conversationID = :convID")
     public List<Conversation> loadConversation(String convID);
 
-    @Query("SELECT * FROM message " +
-            "WHERE message.conversationUUID = :convID")
+    @Query("SELECT * FROM conversation")
+    public List<Conversation> loadAllConversation();
+
+    @Query("SELECT * FROM message " + "WHERE message.conversationUUID = :convID")
     public List<Message> loadConversationMessages(String convID);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

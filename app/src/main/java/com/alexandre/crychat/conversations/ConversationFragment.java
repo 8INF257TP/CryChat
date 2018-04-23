@@ -10,15 +10,17 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.alexandre.crychat.R;
+import com.alexandre.crychat.data.AppDatabase;
 import com.alexandre.crychat.data.Conversation;
 import com.alexandre.crychat.sms.SMSActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConversationFragment extends Fragment{
     private ListView listView;
-    private AdapterView.OnItemClickListener itemClickListener;
-    static final String EXTRA_ID = "com.alexandre.crychat.conversations.EXTRA_ID";
+    private AppDatabase db;
+    private List<Conversation> conversations;
 
     public static ConversationFragment getInstance() { return new ConversationFragment(); }
 
@@ -29,20 +31,23 @@ public class ConversationFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.list_conversation_fragment, container, false);
 
+        db = AppDatabase.getInstance(view.getContext());
         listView = view.findViewById(R.id.conversations);
 
-        ArrayList<Conversation> conversations = new ArrayList<>();
-        ConvAdapter adapter = new ConvAdapter(view.getContext(), conversations);
+        conversations = db.conversationDao().loadAllConversation();
+
+        ConvAdapter adapter = new ConvAdapter(view.getContext(), (ArrayList<Conversation>) conversations);
 
         Conversation test = new Conversation();
         test.setConversationID("+15814901733");
         test.setTime("1234");
         test.setHashedPass("test");
+
+        //db.conversationDao().insertConversation(test);
 
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
