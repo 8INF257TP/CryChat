@@ -1,33 +1,27 @@
 package com.alexandre.crychat.sms;
 
-import android.arch.persistence.room.Room;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.telephony.SmsMessage;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.view.View.OnClickListener;
 
 import com.alexandre.crychat.R;
+import com.alexandre.crychat.conversations.ConversationActivity;
 import com.alexandre.crychat.data.AppDatabase;
 import com.alexandre.crychat.data.Conversation;
 import com.alexandre.crychat.data.Message;
-import com.alexandre.crychat.data.MessageDao;
 
 import java.util.ArrayList;
-import java.util.List;
-
 
 public class SMSFragment extends Fragment implements ISMSContract.View{
     private ISMSContract.Presenter presenter;
-    private Button sendButton;
     private SMSAdapter adapter;
     private View view;
-    private ListView listView;
+    private Conversation conversation;
 
     private AppDatabase db;
 
@@ -45,12 +39,20 @@ public class SMSFragment extends Fragment implements ISMSContract.View{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedBundle) {
         super.onCreateView(inflater, container, savedBundle);
 
-
         //On dessine le layout
         view = inflater.inflate(R.layout.sms_reader_fragment, container, false);
-        // Creation d'un nouveau ListView
-        listView = view.findViewById(R.id.textMessages);
+
+        // set the conversation with intent from ConversationActivity
+        conversation = new Conversation();
+        conversation.setConversationID(getActivity().getIntent().getStringExtra("EXTRA_ID"));
+        conversation.setTime(getActivity().getIntent().getStringExtra("EXTRA_DATE"));
+        conversation.setHashedPass(getActivity().getIntent().getStringExtra("EXTRA_PASS"));
+
+        // generating new db instance
         db = AppDatabase.getInstance(view.getContext());
+
+        // Creation d'un nouveau ListView
+        ListView listView = view.findViewById(R.id.textMessages);
 
         // creating adapter to fill de ListView
         ArrayList<Message> messages = new ArrayList<>();
@@ -59,17 +61,16 @@ public class SMSFragment extends Fragment implements ISMSContract.View{
         // attaching Adapater to the ListView
         listView.setAdapter(adapter);
 
-        final Conversation conv = new Conversation("10023", "test");
-
         new Thread(new Runnable() {
             @Override
             public void run() {
-                db.conversationDao().insertConversation(conv);
+                db.conversationDao().insertConversation(conversation);
             }
         }).start();
 
+
         // attaching onClickListener to send button
-        sendButton = view.findViewById(R.id.send);
+        Button sendButton = view.findViewById(R.id.send);
         sendButton.setOnClickListener(listener);
 
         return view;
@@ -79,14 +80,15 @@ public class SMSFragment extends Fragment implements ISMSContract.View{
         @Override
         public void onClick(View v){
             EditText edit = view.findViewById(R.id.edit_text);
-            Message sentMsg = new Message(edit.getText().toString(), "Alex", "ConvoTest", "2018-20-04");
+            final Message sentMsg = new Message(edit.getText().toString(), "Alex", "ConvoTest", "2018-20-04");
 
             adapter.add(sentMsg);
             adapter.notifyDataSetChanged();
 
             //db.messageDao().insertMessage(sentMsg);
 
-            presenter.sendMessage(edit.getText().toString());
+
+            presenter.sendMessage(conversation.getConversationID(), edit.getText().toString());
         }
     };
 
@@ -102,6 +104,16 @@ public class SMSFragment extends Fragment implements ISMSContract.View{
 
     @Override
     public void messageReceived(String sender, String message) {
-        
+        final Message receivedMsg = new Message(message, sender, conversation.getConversationID(), "2018-04-22");
+
+        adapter.add(receivedMsg);
+        adapter.notifyDataSetChanged();
+
+        new Thread(new Runnable(){
+            @Override
+            public void run(){
+                db.messageDao().insertMessage(receivedMsg);
+            }
+        });
     }
 }

@@ -17,6 +17,7 @@ public class Conversation {
     @ColumnInfo(name="hashed_password")
     private String hashedPass;
 
+    public Conversation() {}
     public Conversation(String time, String hashedPass)
     {
         conversationID = UUID.randomUUID().toString();

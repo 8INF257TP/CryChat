@@ -42,9 +42,9 @@ public class SMSPresenter implements ISMSContract.Presenter, IDataReceived {
      *
      * @param msg Message devant être envoyé
      */
-    public void sendMessage(String msg){
+    public void sendMessage(String address, String msg){
         SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage("+15812343545", null, msg, null, null);
+        smsManager.sendTextMessage(address, null, msg, null, null);
     }
 
     @Override
@@ -79,5 +79,6 @@ public class SMSPresenter implements ISMSContract.Presenter, IDataReceived {
                 return;
             }
         }
+        frag.messageReceived(sms.getDisplayOriginatingAddress(), message);
     }
 }
