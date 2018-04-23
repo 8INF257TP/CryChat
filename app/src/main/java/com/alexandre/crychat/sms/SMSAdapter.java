@@ -35,7 +35,7 @@ public class SMSAdapter extends ArrayAdapter<Message>{
         TextView theMessage = (TextView)convertView.findViewById(R.id.theMessage);
 
         theMessage.setText(newMessage.getMessage());
-        dateReceived.setText(newMessage.getMessageID());
+        dateReceived.setText(newMessage.getDate());
 
         return convertView;
     }

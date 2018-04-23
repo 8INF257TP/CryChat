@@ -3,6 +3,7 @@ package com.alexandre.crychat.sms;
 import android.arch.persistence.room.Room;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.telephony.SmsMessage;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -101,5 +102,6 @@ public class SMSFragment extends Fragment implements ISMSContract.View{
 
     @Override
     public void messageReceived(String sender, String message) {
+        
     }
 }

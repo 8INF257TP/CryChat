@@ -1,4 +1,9 @@
 <resources>
+    //list_conversation_fragment
+    <string name="new_conversation">Nouvelle conversation</string>
+    <string name="nav_contacts">Contacts</string>
+
+
     <string name="app_name">CryChat</string>
     <string name="enter_message">Entrez votre message ici</string>
 
