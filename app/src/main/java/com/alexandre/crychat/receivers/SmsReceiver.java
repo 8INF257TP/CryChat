@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
 
-import com.alexandre.crychat.sms.SMSPresenter;
 import com.alexandre.crychat.utilities.IDataReceived;
 
 public class SmsReceiver extends BroadcastReceiver {

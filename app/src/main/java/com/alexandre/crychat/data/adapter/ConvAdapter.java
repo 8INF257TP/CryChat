@@ -1,4 +1,4 @@
-package com.alexandre.crychat.conversations;
+package com.alexandre.crychat.data.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

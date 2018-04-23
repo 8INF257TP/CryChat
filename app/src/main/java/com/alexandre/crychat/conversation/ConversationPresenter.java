@@ -1,24 +1,18 @@
-package com.alexandre.crychat.sms;
+package com.alexandre.crychat.conversation;
 
 import android.content.Context;
 import android.telephony.SmsMessage;
 import android.util.Base64;
-import android.util.Log;
 
 import com.alexandre.crychat.receivers.SmsReceiver;
 import com.alexandre.crychat.utilities.CryptoServiceProvider;
 import com.alexandre.crychat.utilities.IDataReceived;
 
-import java.io.ByteArrayOutputStream;
-import java.util.List;
-
 import android.telephony.SmsManager;
-import android.widget.Toast;
 
 
-public class SMSPresenter implements ISMSContract.Presenter, IDataReceived {
-
-    private ISMSContract.View frag;
+public class ConversationPresenter implements IConversationContract.Presenter, IDataReceived {
+    private IConversationContract.View frag;
     /**
      * Used to identify crypted SMS messages
      *
@@ -26,11 +20,12 @@ public class SMSPresenter implements ISMSContract.Presenter, IDataReceived {
      */
     private final String MD5 = "b746dd1ceef69da6afdcbbaf320e018a";
 
-    SMSPresenter(Context context, ISMSContract.View fragment)
+    ConversationPresenter(Context context, IConversationContract.View frag)
     {
-        frag = fragment;
-        frag.setPresenter(this);
+        this.frag = frag;
+        this.frag.setPresenter(this);
         SmsReceiver.addListener(this);
+
     }
 
     @Override
@@ -80,5 +75,10 @@ public class SMSPresenter implements ISMSContract.Presenter, IDataReceived {
             }
         }
         frag.messageReceived(sms.getDisplayOriginatingAddress(), message);
+    }
+
+    @Override
+    public void afficherConversation(String conversationId, byte[] password) {
+
     }
 }

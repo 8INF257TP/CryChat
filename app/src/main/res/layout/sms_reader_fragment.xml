@@ -5,7 +5,7 @@
     android:id="@+id/sms_reader_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.alexandre.crychat.sms.SMSActivity">
+    tools:context="com.alexandre.crychat.conversation.ConversationActivity">
 
         <ListView
             android:id="@+id/textMessages"

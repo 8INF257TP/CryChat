@@ -1,4 +1,4 @@
-package com.alexandre.crychat.sms;
+package com.alexandre.crychat.conversation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,27 +7,27 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.alexandre.crychat.R;
+import com.alexandre.crychat.data.Conversation;
+import com.alexandre.crychat.main_menu.MainFragment;
 
-public class SMSActivity extends AppCompatActivity {
-    private SMSPresenter presenter;
-    private SMSFragment frag;
+public class ConversationActivity extends AppCompatActivity {
+    private ConversationPresenter presenter;
+    private ConversationFragment frag;
 
     @Override
     protected void onCreate(Bundle savedBundle) {
         super.onCreate(savedBundle);
         setContentView(R.layout.activity_main);
 
-        frag = (SMSFragment) getSupportFragmentManager().findFragmentById(R.id.sms_reader_fragment);
+        frag = (ConversationFragment) getSupportFragmentManager().findFragmentById(R.id.sms_reader_fragment);
 
         if(frag == null) {
-            frag = SMSFragment.getInstance();
-
+            frag = ConversationFragment.getInstance();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.activity_main_frame, frag);
             transaction.commit();
         }
-
-        presenter = new SMSPresenter(this, frag);
+        presenter = new ConversationPresenter(this, frag);
     }
 
     @Override
@@ -48,5 +48,11 @@ public class SMSActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         presenter.unsubscribe();
+    }
+
+    public void loadSmsFragment(Conversation selected_conv) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.add(R.id.sms_reader_fragment , frag);
+        transaction.commit();
     }
 }

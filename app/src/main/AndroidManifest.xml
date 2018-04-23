@@ -29,16 +29,16 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".conversations.ConversationActivity">
+        <activity android:name=".main_menu.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
-        <activity android:name=".sms.SMSActivity">
+        <activity android:name=".conversation.ConversationActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SMS_ACTIVITY" />
+                <action android:name="android.intent.action.ConversationActivity" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>

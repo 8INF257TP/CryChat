@@ -1,4 +1,4 @@
-package com.alexandre.crychat.sms;
+package com.alexandre.crychat.data.adapter;
 
 import com.alexandre.crychat.R;
 import com.alexandre.crychat.data.Message;

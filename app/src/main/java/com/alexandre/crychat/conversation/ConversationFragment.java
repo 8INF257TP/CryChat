@@ -1,4 +1,4 @@
-package com.alexandre.crychat.sms;
+package com.alexandre.crychat.conversation;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,24 +10,24 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import com.alexandre.crychat.R;
-import com.alexandre.crychat.conversations.ConversationActivity;
 import com.alexandre.crychat.data.AppDatabase;
 import com.alexandre.crychat.data.Conversation;
 import com.alexandre.crychat.data.Message;
+import com.alexandre.crychat.data.adapter.SMSAdapter;
 
 import java.util.ArrayList;
 
-public class SMSFragment extends Fragment implements ISMSContract.View{
-    private ISMSContract.Presenter presenter;
+public class ConversationFragment extends Fragment implements IConversationContract.View{
+    private IConversationContract.Presenter presenter;
     private SMSAdapter adapter;
     private View view;
     private Conversation conversation;
 
     private AppDatabase db;
 
-    public static SMSFragment getInstance()
+    public static ConversationFragment getInstance()
     {
-        return new SMSFragment();
+        return new ConversationFragment();
     }
 
     @Override
@@ -42,7 +42,7 @@ public class SMSFragment extends Fragment implements ISMSContract.View{
         //On dessine le layout
         view = inflater.inflate(R.layout.sms_reader_fragment, container, false);
 
-        // set the conversation with intent from ConversationActivity
+
         conversation = new Conversation();
         conversation.setConversationID(getActivity().getIntent().getStringExtra("EXTRA_ID"));
         conversation.setTime(getActivity().getIntent().getStringExtra("EXTRA_DATE"));
@@ -60,13 +60,6 @@ public class SMSFragment extends Fragment implements ISMSContract.View{
 
         // attaching Adapater to the ListView
         listView.setAdapter(adapter);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                db.conversationDao().insertConversation(conversation);
-            }
-        }).start();
 
 
         // attaching onClickListener to send button
@@ -87,7 +80,6 @@ public class SMSFragment extends Fragment implements ISMSContract.View{
 
             //db.messageDao().insertMessage(sentMsg);
 
-
             presenter.sendMessage(conversation.getConversationID(), edit.getText().toString());
         }
     };
@@ -98,7 +90,7 @@ public class SMSFragment extends Fragment implements ISMSContract.View{
     }
 
     @Override
-    public void setPresenter(ISMSContract.Presenter presenter) {
+    public void setPresenter(IConversationContract.Presenter presenter) {
         this.presenter = presenter;
     }
 
