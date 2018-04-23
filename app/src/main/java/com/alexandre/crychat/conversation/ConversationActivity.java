@@ -49,10 +49,4 @@ public class ConversationActivity extends AppCompatActivity {
         super.onPause();
         presenter.unsubscribe();
     }
-
-    public void loadSmsFragment(Conversation selected_conv) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.sms_reader_fragment , frag);
-        transaction.commit();
-    }
 }

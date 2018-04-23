@@ -11,14 +11,5 @@
             android:id="@+id/activity_main_frame"
             android:layout_height="match_parent"
             android:layout_width="match_parent">
-
         </FrameLayout>
-
-
-        <ListView
-            android:id="@+id/conversations"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </ListView>
-
 </LinearLayout>

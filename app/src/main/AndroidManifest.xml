@@ -29,6 +29,13 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receivers.OnBoot"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".main_menu.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -53,7 +60,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".HeadlessSmsSendService"
+        <service android:name=".Service"
             android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE"
             android:exported="true" >
             <intent-filter>
@@ -64,6 +71,11 @@
                 <data android:scheme="mms" />
                 <data android:scheme="mmsto" />
             </intent-filter>
+        </service>
+
+        <service android:name=".service.SMSService"
+            android:permission="android.permission.RECEIVE_SMS">
+
         </service>
     </application>
 

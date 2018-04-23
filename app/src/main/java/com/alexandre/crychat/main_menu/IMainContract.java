@@ -18,5 +18,7 @@ public interface IMainContract {
 
     interface Presenter extends IBasePresenter{
         ArrayList<Conversation> getConversations();
+        Conversation newConversation(String conversationID);
+        Conversation findConversation(String ConversationID);
     }
 }

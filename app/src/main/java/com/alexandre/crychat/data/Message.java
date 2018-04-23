@@ -37,6 +37,8 @@ public class Message {
         this.date = date;
     }
 
+    public Message(){}
+
     public String getMessageID() {
         return messageID;
     }

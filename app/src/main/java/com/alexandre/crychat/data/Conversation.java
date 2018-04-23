@@ -18,9 +18,9 @@ public class Conversation {
     private String hashedPass;
 
     public Conversation() {}
-    public Conversation(String time, String hashedPass)
+    public Conversation(@NonNull String conversationID, String time, String hashedPass)
     {
-        conversationID = UUID.randomUUID().toString();
+        this.conversationID = conversationID;
         this.time = time;
         this.hashedPass = hashedPass;
     }

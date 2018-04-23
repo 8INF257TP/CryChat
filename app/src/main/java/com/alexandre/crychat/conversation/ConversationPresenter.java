@@ -4,15 +4,20 @@ import android.content.Context;
 import android.telephony.SmsMessage;
 import android.util.Base64;
 
+import com.alexandre.crychat.data.AppDatabase;
+import com.alexandre.crychat.data.Message;
 import com.alexandre.crychat.receivers.SmsReceiver;
 import com.alexandre.crychat.utilities.CryptoServiceProvider;
 import com.alexandre.crychat.utilities.IDataReceived;
 
 import android.telephony.SmsManager;
 
+import java.util.ArrayList;
+
 
 public class ConversationPresenter implements IConversationContract.Presenter, IDataReceived {
     private IConversationContract.View frag;
+    private AppDatabase db;
     /**
      * Used to identify crypted SMS messages
      *
@@ -22,6 +27,7 @@ public class ConversationPresenter implements IConversationContract.Presenter, I
 
     ConversationPresenter(Context context, IConversationContract.View frag)
     {
+        db = AppDatabase.getInstance(context);
         this.frag = frag;
         this.frag.setPresenter(this);
         SmsReceiver.addListener(this);
@@ -29,8 +35,8 @@ public class ConversationPresenter implements IConversationContract.Presenter, I
     }
 
     @Override
-    public void getMessages(String groupId) {
-
+    public ArrayList<Message> getMessages(String groupId) {
+        return (ArrayList) db.conversationDao().loadConversationMessages(groupId);
     }
 
     /**
@@ -38,6 +44,7 @@ public class ConversationPresenter implements IConversationContract.Presenter, I
      * @param msg Message devant être envoyé
      */
     public void sendMessage(String address, String msg){
+        db.messageDao().insertMessage(new Message(msg, "alex", frag.getConversation().getConversationID(), "2018-04-23"));
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(address, null, msg, null, null);
     }
@@ -74,7 +81,9 @@ public class ConversationPresenter implements IConversationContract.Presenter, I
                 return;
             }
         }
-        frag.messageReceived(sms.getDisplayOriginatingAddress(), message);
+        Message receivedMessage = new Message(message, "alex", frag.getConversation().getConversationID(), "2018-04-23");
+        db.messageDao().insertMessage(receivedMessage);
+        frag.messageReceived(receivedMessage);
     }
 
     @Override

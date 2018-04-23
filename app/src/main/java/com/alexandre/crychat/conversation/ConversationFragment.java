@@ -16,14 +16,13 @@ import com.alexandre.crychat.data.Message;
 import com.alexandre.crychat.data.adapter.SMSAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ConversationFragment extends Fragment implements IConversationContract.View{
     private IConversationContract.Presenter presenter;
     private SMSAdapter adapter;
     private View view;
     private Conversation conversation;
-
-    private AppDatabase db;
 
     public static ConversationFragment getInstance()
     {
@@ -42,21 +41,16 @@ public class ConversationFragment extends Fragment implements IConversationContr
         //On dessine le layout
         view = inflater.inflate(R.layout.sms_reader_fragment, container, false);
 
-
         conversation = new Conversation();
         conversation.setConversationID(getActivity().getIntent().getStringExtra("EXTRA_ID"));
         conversation.setTime(getActivity().getIntent().getStringExtra("EXTRA_DATE"));
         conversation.setHashedPass(getActivity().getIntent().getStringExtra("EXTRA_PASS"));
-
-        // generating new db instance
-        db = AppDatabase.getInstance(view.getContext());
-
         // Creation d'un nouveau ListView
         ListView listView = view.findViewById(R.id.textMessages);
 
         // creating adapter to fill de ListView
-        ArrayList<Message> messages = new ArrayList<>();
-        adapter = new SMSAdapter(view.getContext(), messages);
+        ArrayList<Message> messages = presenter.getMessages(conversation.getConversationID());
+        adapter = new SMSAdapter(view.getContext(), (ArrayList) messages);
 
         // attaching Adapater to the ListView
         listView.setAdapter(adapter);
@@ -73,14 +67,17 @@ public class ConversationFragment extends Fragment implements IConversationContr
         @Override
         public void onClick(View v){
             EditText edit = view.findViewById(R.id.edit_text);
-            final Message sentMsg = new Message(edit.getText().toString(), "Alex", "ConvoTest", "2018-20-04");
 
-            adapter.add(sentMsg);
-            adapter.notifyDataSetChanged();
+            if(!edit.getText().toString().isEmpty()) {
+                final Message sentMsg = new Message(edit.getText().toString(), "Alex", conversation.getConversationID(), "2018-20-04");
 
-            //db.messageDao().insertMessage(sentMsg);
+                adapter.add(sentMsg);
+                adapter.notifyDataSetChanged();
+                presenter.sendMessage(conversation.getConversationID(), edit.getText().toString());
 
-            presenter.sendMessage(conversation.getConversationID(), edit.getText().toString());
+                edit.getText().clear();
+                edit.clearFocus();
+            }
         }
     };
 
@@ -95,17 +92,13 @@ public class ConversationFragment extends Fragment implements IConversationContr
     }
 
     @Override
-    public void messageReceived(String sender, String message) {
-        final Message receivedMsg = new Message(message, sender, conversation.getConversationID(), "2018-04-22");
-
-        adapter.add(receivedMsg);
+    public void messageReceived(Message message) {
+        adapter.add(message);
         adapter.notifyDataSetChanged();
+    }
 
-        new Thread(new Runnable(){
-            @Override
-            public void run(){
-                db.messageDao().insertMessage(receivedMsg);
-            }
-        });
+    @Override
+    public Conversation getConversation(){
+        return this.conversation;
     }
 }
