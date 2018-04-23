@@ -5,7 +5,10 @@ import android.telephony.SmsMessage;
 import android.util.Base64;
 import android.util.Log;
 
+import com.alexandre.crychat.receivers.SmsReceiver;
 import com.alexandre.crychat.utilities.CryptoServiceProvider;
+import com.alexandre.crychat.utilities.IDataReceived;
+
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
@@ -13,7 +16,7 @@ import android.telephony.SmsManager;
 import android.widget.Toast;
 
 
-public class SMSPresenter implements ISMSContract.Presenter {
+public class SMSPresenter implements ISMSContract.Presenter, IDataReceived {
 
     private ISMSContract.View frag;
     /**
@@ -21,14 +24,13 @@ public class SMSPresenter implements ISMSContract.Presenter {
      *
      * Append MD5 to the beginning of a crypted SMS message
      */
-    private static final String MD5 = "b746dd1ceef69da6afdcbbaf320e018a";
-    private static Context context;
+    private final String MD5 = "b746dd1ceef69da6afdcbbaf320e018a";
 
     SMSPresenter(Context context, ISMSContract.View fragment)
     {
         frag = fragment;
         frag.setPresenter(this);
-        this.context = context;
+        SmsReceiver.addListener(this);
     }
 
     @Override
@@ -47,25 +49,7 @@ public class SMSPresenter implements ISMSContract.Presenter {
 
     @Override
     public void subscribe() {
-        CryptoServiceProvider crypto = new CryptoServiceProvider("test");
-        try {
-            byte[] crypted = crypto.Encrypt("va chier mon gros calis de chiens de marde");
-            byte[] sms = new String(MD5).getBytes();
 
-            /**
-             * :)
-             */
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            output.write(sms);
-            output.write(crypted);
-            byte[] sms_crypted = output.toByteArray();
-
-            Log.d("CryChat crypted", Base64.encodeToString(crypted, Base64.DEFAULT));
-            String decrypted = crypto.Decrypt(crypted);
-            Log.d("CryChat decrypted", decrypted);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -73,8 +57,16 @@ public class SMSPresenter implements ISMSContract.Presenter {
 
     }
 
-    public static void messageReceived(SmsMessage sms) {
+    @Override
+    public void onDataReceived(Object o) {
+        SmsMessage sms;
+        if(o.getClass() == SmsMessage.class)
+            sms = (SmsMessage) o;
+        else
+            return;
+
         String message = sms.getMessageBody();
+        //TODO: change password (input from user)
         CryptoServiceProvider crypto = new CryptoServiceProvider("test");
         if(message.contains(MD5)) {
             message = message.substring(MD5.length());
