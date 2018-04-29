@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.UUID;
 
@@ -23,16 +24,13 @@ public class Message {
     private String date;
     @ColumnInfo(name="message") @NonNull
     private String message;
-    @ColumnInfo(name="source") @NonNull
-    private String source;
     @ColumnInfo(name="conversationUUID") @NonNull
     private String conversationUUID;
 
-    public Message(String message, String source, String conversationUUID, String date)
+    public Message(String message, String conversationUUID, String date)
     {
         messageID = UUID.randomUUID().toString();
         this.message = message;
-        this.source = source;
         this.conversationUUID = conversationUUID;
         this.date = date;
     }
@@ -45,7 +43,6 @@ public class Message {
     public String getMessage() {
         return message;
     }
-    public String getSource() { return source; }
     public String getConversationUUID() {
         return conversationUUID;
     }
@@ -54,7 +51,6 @@ public class Message {
     public void setMessageID(String messageID) { this.messageID = messageID; }
     public void setDate (String date) {this.date = date;}
     public void setMessage(String message) { this.message = message; }
-    public void setSource(String source) {this.source = source;}
     public void setConversationUUID(String conversationUUID) {this.conversationUUID = conversationUUID;}
 
 }

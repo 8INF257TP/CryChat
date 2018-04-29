@@ -29,6 +29,7 @@ public class MainFragment extends Fragment implements IMainContract.View {
     private ListView listView;
     private List<Conversation> conversations;
     private IMainContract.Presenter presenter;
+    private ConvAdapter adapter;
     private static final int CONTACT_RESULT  = 12345;
 
     public static MainFragment getInstance() { return new MainFragment(); }
@@ -59,6 +60,7 @@ public class MainFragment extends Fragment implements IMainContract.View {
                 intent.putExtra("EXTRA_ID", selectedConversation.getConversationID());
                 intent.putExtra("EXTRA_DATE", selectedConversation.getTime());
                 intent.putExtra("EXTRA_PASS", selectedConversation.getHashedPass());
+                presenter.unsubscribe();
                 startActivity(intent);
             }
         });
@@ -78,6 +80,11 @@ public class MainFragment extends Fragment implements IMainContract.View {
     @Override
     public void setPresenter(IMainContract.Presenter presenter) {
         this.presenter = presenter;
+    }
+
+    @Override
+    public void conversationCreated(Conversation c) {
+        conversations.add(c);
     }
 
     @Override

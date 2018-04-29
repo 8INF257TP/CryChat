@@ -14,8 +14,10 @@ import com.alexandre.crychat.data.AppDatabase;
 import com.alexandre.crychat.data.Conversation;
 import com.alexandre.crychat.data.Message;
 import com.alexandre.crychat.data.adapter.SMSAdapter;
+import com.alexandre.crychat.utilities.DateParser;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class ConversationFragment extends Fragment implements IConversationContract.View{
@@ -69,11 +71,12 @@ public class ConversationFragment extends Fragment implements IConversationContr
             EditText edit = view.findViewById(R.id.edit_text);
 
             if(!edit.getText().toString().isEmpty()) {
-                final Message sentMsg = new Message(edit.getText().toString(), "Alex", conversation.getConversationID(), "2018-20-04");
+                final Message sentMsg = new Message(edit.getText().toString(), conversation.getConversationID(), DateParser.getCurrentDate());
 
                 adapter.add(sentMsg);
                 adapter.notifyDataSetChanged();
-                presenter.sendMessage(conversation.getConversationID(), edit.getText().toString());
+                //TODO:Change crypted to a switch button
+                presenter.sendMessage(conversation.getConversationID(), edit.getText().toString(), true);
 
                 edit.getText().clear();
                 edit.clearFocus();

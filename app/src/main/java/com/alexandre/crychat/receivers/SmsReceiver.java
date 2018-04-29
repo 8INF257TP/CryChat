@@ -5,12 +5,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.SmsMessage;
+import android.util.Base64;
 import android.widget.Toast;
 
 import com.alexandre.crychat.data.AppDatabase;
+import com.alexandre.crychat.data.Conversation;
 import com.alexandre.crychat.data.Message;
+import com.alexandre.crychat.utilities.DateParser;
 import com.alexandre.crychat.utilities.IDataReceived;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,6 +28,7 @@ import java.util.List;
 public class SmsReceiver extends BroadcastReceiver {
 
     private static IDataReceived listener;
+    private final String MD5 = "b746dd1ceef69da6afdcbbaf320e018a";
 
     /**
      *
@@ -49,8 +55,7 @@ public class SmsReceiver extends BroadcastReceiver {
         Bundle bundle = intent.getExtras();
         AppDatabase db = AppDatabase.getInstance(context);
         List<Message> messages = new ArrayList<>();
-        Message receivedMsg = new Message();
-        Message test = new Message();
+        Message receivedMsg;
 
         if(bundle != null) {
             Object[] pdus = (Object[]) bundle.get("pdus");
@@ -58,25 +63,54 @@ public class SmsReceiver extends BroadcastReceiver {
             for(int i = 0; i < pdus.length; ++i)
             {
                 SmsMessage sms = SmsMessage.createFromPdu((byte[]) pdus[i]);
-                if(listener != null)
-                    listener.onDataReceived(sms);
+
+
+                String message, conversationUUID, date;
 
                 // creates new Message with current information and insert into database
-                Toast.makeText(context, sms.getMessageBody(), Toast.LENGTH_LONG);
+                message = sms.getMessageBody();
 
-                receivedMsg.setMessage(sms.getMessageBody());
-                receivedMsg.setConversationUUID(sms.getDisplayOriginatingAddress());
-                receivedMsg.setDate(Long.toString(sms.getTimestampMillis()));
-                receivedMsg.setSource(sms.getDisplayOriginatingAddress());
+                if(message.contains(MD5)) {
+                    try {
+                        conversationUUID = Base64.encodeToString(
+                                MessageDigest.getInstance("SHA-512").digest(
+                                                sms.getDisplayOriginatingAddress().getBytes()),
+                                Base64.DEFAULT);
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+                } else {
+                    conversationUUID = sms.getDisplayOriginatingAddress();
+                }
 
-                SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyy HH:mm:ss");
-                String date = formatter.format(new Date(sms.getTimestampMillis()));
+                date = DateParser.getDateFromTimeStamp(sms.getTimestampMillis());
+
+                receivedMsg = new Message(message, conversationUUID, date);
 
                 messages.add(receivedMsg);
+
+                if(listener != null)
+                    listener.onDataReceived(receivedMsg);
             }
 
+
+
             for(Message message : messages)
+            {
+                List<Conversation> conversations = db.conversationDao().loadConversation(message.getConversationUUID());
+
+                if(conversations.size() == 0) {
+                    Conversation conversation = new Conversation();
+                    conversation.setConversationID(message.getConversationUUID());
+                    conversation.setTime(DateParser.getCurrentDate());
+                    db.conversationDao().insertConversation(conversation);
+
+                    if(listener != null)
+                        listener.onDataReceived(conversation);
+                }
                 db.messageDao().insertMessage(message);
+            }
         }
     }
 }

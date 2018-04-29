@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.alexandre.crychat.R;
-import com.alexandre.crychat.data.Conversation;
-import com.alexandre.crychat.main_menu.MainFragment;
 
 public class ConversationActivity extends AppCompatActivity {
     private ConversationPresenter presenter;

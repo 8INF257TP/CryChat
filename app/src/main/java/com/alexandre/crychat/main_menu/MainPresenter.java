@@ -5,6 +5,10 @@ import android.content.Context;
 
 import com.alexandre.crychat.data.AppDatabase;
 import com.alexandre.crychat.data.Conversation;
+import com.alexandre.crychat.data.Message;
+import com.alexandre.crychat.receivers.SmsReceiver;
+import com.alexandre.crychat.utilities.DateParser;
+import com.alexandre.crychat.utilities.IDataReceived;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +17,7 @@ import java.util.List;
  * Created by alexa on 2018-04-23.
  */
 
-public class MainPresenter implements IMainContract.Presenter {
+public class MainPresenter implements IMainContract.Presenter, IDataReceived {
     IMainContract.View frag;
     private AppDatabase db;
 
@@ -21,16 +25,17 @@ public class MainPresenter implements IMainContract.Presenter {
         this.frag = frag;
         frag.setPresenter(this);
         db = AppDatabase.getInstance(context);
+        subscribe();
     }
 
     @Override
     public void subscribe() {
-
+        SmsReceiver.addListener(this);
     }
 
     @Override
     public void unsubscribe() {
-
+        SmsReceiver.removeListener();
     }
 
     @Override
@@ -41,7 +46,7 @@ public class MainPresenter implements IMainContract.Presenter {
 
     // Creates new conversation and returns it
     public Conversation newConversation(String conversationID){
-        Conversation newConversation = new Conversation(conversationID, "2018-23-04", "test");
+        Conversation newConversation = new Conversation(conversationID, DateParser.getCurrentDate(), "test");
 
         db.conversationDao().insertConversation(newConversation);
         return newConversation;
@@ -55,6 +60,18 @@ public class MainPresenter implements IMainContract.Presenter {
         if(conv.isEmpty())
             return newConversation(conversationID);
         else
-            return conv.get(0);
+            return conv.get(0); //TODO: ???
+    }
+
+    @Override
+    public void onDataReceived(Object o) {
+        Conversation received;
+
+        if(o.getClass() == Conversation.class)
+            received = (Conversation) o;
+        else
+            return;
+
+        this.frag.conversationCreated(received);
     }
 }

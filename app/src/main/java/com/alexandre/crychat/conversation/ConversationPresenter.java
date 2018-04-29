@@ -8,10 +8,13 @@ import com.alexandre.crychat.data.AppDatabase;
 import com.alexandre.crychat.data.Message;
 import com.alexandre.crychat.receivers.SmsReceiver;
 import com.alexandre.crychat.utilities.CryptoServiceProvider;
+import com.alexandre.crychat.utilities.DateParser;
 import com.alexandre.crychat.utilities.IDataReceived;
 
 import android.telephony.SmsManager;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 
@@ -43,8 +46,25 @@ public class ConversationPresenter implements IConversationContract.Presenter, I
      *
      * @param msg Message devant être envoyé
      */
-    public void sendMessage(String address, String msg){
-        db.messageDao().insertMessage(new Message(msg, "alex", frag.getConversation().getConversationID(), "2018-04-23"));
+    public void sendMessage(String address, String msg, boolean crypted) {
+        String message;
+
+        if(crypted) {
+            CryptoServiceProvider crypto = new CryptoServiceProvider("test");
+            message = MD5;
+
+            try {
+                byte[] cryptedMessage = crypto.Encrypt(msg);
+                String base64EncodedMessage = Base64.encodeToString(cryptedMessage, Base64.DEFAULT);
+                message += base64EncodedMessage;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return;
+            }
+        } else {
+            message = msg;
+        }
+        db.messageDao().insertMessage(new Message(message, frag.getConversation().getConversationID(), DateParser.getCurrentDate()));
         SmsManager smsManager = SmsManager.getDefault();
         smsManager.sendTextMessage(address, null, msg, null, null);
     }
@@ -61,29 +81,33 @@ public class ConversationPresenter implements IConversationContract.Presenter, I
 
     @Override
     public void onDataReceived(Object o) {
-        SmsMessage sms;
-        if(o.getClass() == SmsMessage.class)
-            sms = (SmsMessage) o;
+        Message sms;
+        if(o.getClass() == Message.class)
+            sms = (Message) o;
         else
             return;
 
-        String message = sms.getMessageBody();
+        if(sms.getConversationUUID().compareTo(frag.getConversation().getConversationID()) != 0)
+            return;
+
+        String message = sms.getMessage();
         //TODO: change password (input from user)
         CryptoServiceProvider crypto = new CryptoServiceProvider("test");
         if(message.contains(MD5)) {
             message = message.substring(MD5.length());
+
+            //If the message is crypted, Hash the source to fetch the proper conversation
             byte[] cryptedMessage = Base64.decode(message, Base64.DEFAULT);
 
             try {
                 message = crypto.Decrypt(cryptedMessage);
+                sms.setMessage(message);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
         }
-        Message receivedMessage = new Message(message, "alex", frag.getConversation().getConversationID(), "2018-04-23");
-        db.messageDao().insertMessage(receivedMessage);
-        frag.messageReceived(receivedMessage);
+        frag.messageReceived(sms);
     }
 
     @Override

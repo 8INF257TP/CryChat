@@ -8,7 +8,7 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {Conversation.class, Message.class}, version = 1)
+@Database(entities = {Conversation.class, Message.class}, version = 2)
 public abstract class AppDatabase extends RoomDatabase{
     private static AppDatabase instance = null;
     private static final String DATABASE_NAME = "conversation-db";
@@ -20,7 +20,7 @@ public abstract class AppDatabase extends RoomDatabase{
         if(instance == null) {
             synchronized (AppDatabase.class) {
                 // TODO: run db on a new thread (currently on UI thread)
-                instance = Room.databaseBuilder(context, AppDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
+                instance = Room.databaseBuilder(context, AppDatabase.class, DATABASE_NAME).allowMainThreadQueries().fallbackToDestructiveMigration().build();
             }
         }
         return instance;

@@ -17,7 +17,7 @@ public interface IConversationContract {
 
     interface Presenter extends IBasePresenter {
         ArrayList<Message> getMessages(String groupId);
-        void sendMessage(String address, String msg);
+        void sendMessage(String address, String msg, boolean crypted);
         void afficherConversation(String conversationId, byte[] password);
 
 

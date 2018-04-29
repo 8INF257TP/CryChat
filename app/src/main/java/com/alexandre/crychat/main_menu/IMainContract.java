@@ -14,6 +14,7 @@ public interface IMainContract {
     interface View extends IBaseView<Presenter>{
         @Override
         void setPresenter(Presenter presenter);
+        void conversationCreated(Conversation c);
     }
 
     interface Presenter extends IBasePresenter{
